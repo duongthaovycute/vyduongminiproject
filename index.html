@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<title>M5-Miniproject</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<!-- Chart.js + datalabels -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body class=""> 
+
+<!-- bubble bg -->
+<canvas id="bubbles"></canvas>
+<!-- vẽ bằng canvas-->
+  
+<header>
+  <div>
+    <h1>🐱 M5-Miniproject</h1>
+    <div class="subtitle"> Web đo thời gian thực 🎰</div>
+  </div>
+  <div class="header-right">
+    <strong>Sinh viên:</strong> Dương Thảo Vy<br>
+    <strong>GVHD:</strong> Võ Hồng Hải<br>
+           +Anh: Dương Ngọc Thành        
+  </div>
+</header>
+
+<div class="controls">
+  <select id="stationSelect" class="select" title="Chọn station">
+    <option value="https://z2c6um5ew3.execute-api.ap-southeast-1.amazonaws.com/data?station=station_01">station_01</option>
+    <option value="https://z2c6um5ew3.execute-api.ap-southeast-1.amazonaws.com/data?station=station_02">station_02</option>
+    <option value="https://z2c6um5ew3.execute-api.ap-southeast-1.amazonaws.com/data?station=station_03" selected>station_03</option>
+  </select>
+  <button id="pauseBtn" class="btn">Pause</button>
+  <button id="clearBtn" class="btn">Clear</button>
+
+  <!--<! <!DOCTYPE html>: Báo cho trình duyệt biết đây là trang web chuẩn HTML5.
+  <!--<html lang="vi">: Xác định ngôn ngữ là Tiếng Việt (tốt cho SEO và bộ gõ).
+  <!--<meta charset="utf-8" />: Giúp hiển thị tiếng Việt có dấu đúng.
+  <!--<meta name="viewport" ...>: Giúp web hiển thị đẹp trên điện thoại, tự động co giãn.
+  <!--Chart.js & chartjs-plugin-datalabels: Thư viện vẽ biểu đồ.
+  <!--<link rel="stylesheet" href="style.css">: Nối tới file CSS để định dạng màu sắc, bố cục, font chữ, theme,...>
+
+
+  <!-- THEME SELECT -->
+  <div class="theme-select" id="themeSelectContainer" aria-hidden="false">
+    <div class="theme-pill active" data-theme="pastel" id="theme-pill-pastel" title="Pastel (mặc định)">🌸 Pastel</div>
+    <div class="theme-pill" data-theme="batman" id="theme-pill-batman" title="Batman (Dark)">🦇 Batman</div>
+    <div class="theme-pill" data-theme="phoenix" id="theme-pill-phoenix" title="Phoenix (Ruby)">🔥 Phoenix</div>
+  </div>
+
+  <div class="status" id="status">Status: idle</div>
+</div>
+<!-- stationSelect: chọn trạm đo dữ liệu (station_01, 02, 03).
+<!--pauseBtn: tạm dừng việc cập nhật dữ liệu.
+<!--clearBtn: xóa toàn bộ biểu đồ và giá trị hiển thị.
+<!--Ba nút theme-pill (🌸🦇🔥): đổi giao diện màu của web (Pastel / Batman / Phoenix).
+<!--status: hiển thị trạng thái hiện tại (đang tải, lỗi, OK, pause...).-->
+
+  
+<!-- mini cards -->
+<div class="mini-grid">
+  <div class="mini" id="mini-temp"><div class="label">Temperature</div><div class="value" id="v-temp">-- °C</div></div>
+  <div class="mini" id="mini-hum"><div class="label">Humidity</div><div class="value" id="v-hum">-- %</div></div>
+  <div class="mini" id="mini-cps"><div class="label">CPS</div><div class="value" id="v-cps">--</div></div>
+  <div class="mini" id="mini-usv"><div class="label">uSv</div><div class="value" id="v-usv">--</div></div>
+  <div class="mini" id="mini-counts"><div class="label">Counts</div><div class="value" id="v-counts">--</div></div>
+</div>
+  
+<!--Mỗi ô nhỏ hiển thị giá trị đo hiện tại của một chỉ số:
+  Temperature (°C) → nhiệt độ
+  Humidity (%) → độ ẩm
+  CPS → số đếm phóng xạ/giây
+  uSv (µSv/h) → mức bức xạ
+  Counts (total) → tổng số đếm
+  JS sẽ liên tục cập nhật giá trị tại các ô này sau mỗi lần gọi API.-->
+  
+<!-- charts -->
+<div class="charts">
+  <div class="chart-card" data-chart="temp">
+    <button class="zoom-btn">🔍</button>
+    <div class="chart-title">Temperature (°C)</div>
+    <div class="chart-wrap"><canvas id="chart-temp"></canvas></div>
+<!--Mỗi chart-card là một biểu đồ riêng cho từng loại dữ liệu.
+    Bên trong có:
+    Nút 🔍: phóng to biểu đồ (zoom fullscreen).
+    <canvas>: vùng vẽ biểu đồ (dùng Chart.js).
+    <img class="kitty-img">: hình mèo hiển thị ở điểm cuối biểu đồ (biểu tượng động).
+    Dữ liệu được cập nhật liên tục từ API qua hàm pollOnce().-->
+
+    
+    <!-- kitty for this chart -->
+    <img id="kitty-temp" class="kitty-img" src="" alt="kitty-temp" style="display:none">
+  </div>
+
+  <div class="chart-card" data-chart="hum">
+    <button class="zoom-btn">🔍</button>
+    <div class="chart-title">Humidity (%)</div>
+    <div class="chart-wrap"><canvas id="chart-hum"></canvas></div>
+    <img id="kitty-hum" class="kitty-img" src="" alt="kitty-hum" style="display:none">
+  </div>
+
+  <div class="chart-card" data-chart="cps">
+    <button class="zoom-btn">🔍</button>
+    <div class="chart-title">CPS (count/s)</div>
+    <div class="chart-wrap"><canvas id="chart-cps"></canvas></div>
+    <img id="kitty-cps" class="kitty-img" src="" alt="kitty-cps" style="display:none">
+  </div>
+
+  <div class="chart-card" data-chart="usv">
+    <button class="zoom-btn">🔍</button>
+    <div class="chart-title">uSv (µSv/h)</div>
+    <div class="chart-wrap"><canvas id="chart-usv"></canvas></div>
+    <img id="kitty-usv" class="kitty-img" src="" alt="kitty-usv" style="display:none">
+  </div>
+
+  <div class="chart-card" data-chart="counts">
+    <button class="zoom-btn">🔍</button>
+    <div class="chart-title">Counts (total)</div>
+    <div class="chart-wrap"><canvas id="chart-counts"></canvas></div>
+    <img id="kitty-counts" class="kitty-img" src="" alt="kitty-counts" style="display:none">
+  </div>
+</div>
+
+<!-- watermark bottom-right -->
+<div class="watermark">Dương Thảo Vy</div>
+  
+<!--Ghi tên tác giả, thường nằm góc phải dưới của trang web. -->
+
+<script src="script.js" defer></script>
+</body>
+</html>

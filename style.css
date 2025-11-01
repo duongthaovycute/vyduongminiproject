@@ -1,0 +1,289 @@
+/* ================= GLOBAL THEME VARIABLES (defaults = Pastel) ================= */
+:root{
+  --bg-1:#ffe6f2;
+  --bg-2:#fffafc;
+  --card:#fff0f7;
+  --muted:#6b6b6b;
+  --accent-temp:#ff8fab;     /* pink line for temperature */
+  --accent-hum:#91c9ff;
+  --accent-cps:#ffd166;
+  --accent-usv:#c79aff;
+  --accent-counts:#80e3c3;
+  --alert-red:#ff4d4f;
+  --text-primary:#333;
+  --glass: rgba(255,255,255,0.9);
+  --watermark-gradient: linear-gradient(90deg, rgba(255,255,255,0.9), rgba(255,120,160,0.9));
+  --bubble-hue-start:260;
+  --bg-image: none;
+  --bg-image-opacity:0.06;
+  --corner-image: "https://postimg.cc/BtrTRyNF";
+}
+
+/* ================= THEME: BATMAN (dark) ================= */
+.theme-batman{
+  --bg-1:#050508;
+  --bg-2:#0b0c0f;
+  --card: rgba(16,16,20,0.72);
+  --muted:#bdbdbd;
+  --accent-temp:#7379ab; /* gold */
+  --accent-hum:#1a67a2;
+  --accent-cps:#188391;
+  --accent-usv:#336470;
+  --accent-counts:#80e3c3;
+  --alert-red:#ff6b6b;
+  --text-primary:#f2f2f2;
+  --glass: rgba(10,10,12,0.6);
+  --watermark-gradient: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  --bubble-hue-start:220;
+  --bg-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 800'><defs><linearGradient id='g' x1='0' x2='1'><stop offset='0' stop-color='%23000000' stop-opacity='0'/><stop offset='1' stop-color='%23000000' stop-opacity='0.12'/></linearGradient></defs><g fill='%23ffd700' fill-opacity='0.03'><text x='50' y='400' font-size='300' font-family='Arial' opacity='0.02'>🦇</text></g></svg>");
+  --bg-image-opacity:0.07;
+  --corner-image: "data:image/svg+xml;utf8,%3Csvg xmlns='http%3A//www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ccircle cx='60' cy='60' r='56' fill='%23000000'/%3E%3Ctext x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='42' fill='%23ffd700'%3E%F0%9F%A6%87%3C/text%3E%3C/svg%3E";
+}
+
+/* ================= THEME: PHOENIX (ruby) ================= */
+.theme-phoenix{
+  --bg-1:#2a0000;
+  --bg-2:#3a0500;
+  --card: rgba(255,245,245,0.06);
+  --muted:#ffd6d6;
+  --accent-temp:#ff3b3b; /* strong red */
+  --accent-hum:#ff8c6b;
+  --accent-cps:#c22e2e;
+  --accent-usv:#dd856e;
+  --accent-counts:#8b4132;
+  --alert-red:#ff3333;
+  --text-primary:#ffdede;
+  --glass: rgba(30,0,0,0.6);
+  --watermark-gradient: linear-gradient(90deg, rgba(255,120,120,0.06), rgba(255,200,120,0.06));
+  --bubble-hue-start:10;
+  --bg-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 800'><g fill='%23ffb3b3' fill-opacity='0.03'><path d='M600 200 Q700 50 820 200 Q900 320 800 420 Q680 520 560 420 Q440 320 600 200 Z'/></g><g><text x='420' y='420' font-size='260' opacity='0.03'>🔥</text></g></svg>");
+  --bg-image-opacity:0.08;
+  --corner-image: "data:image/svg+xml;utf8,%3Csvg xmlns='http%3A//www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ccircle cx='60' cy='60' r='56' fill='%23ff3b3b'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='40' fill='%23fff5e6'%3E%F0%9F%94%A5%3C/text%3E%3C/svg%3E";
+}
+/*Các biến này quy định:
+Màu nền (--bg-1, --bg-2)
+Màu thẻ card (--card)
+Màu chữ chính và phụ (--text-primary, --muted)
+Màu riêng cho từng loại dữ liệu cảm biến (--accent-temp, --accent-hum...)
+Hiệu ứng nền, watermark, bóng mờ, độ trong suốt (--glass, --bg-image-opacity...) 
+
+
+/* ========== BASE / LAYOUT STYLES ========== */
+*{box-sizing:border-box; font-family:"Poppins",sans-serif;}
+html,body{height:100%}
+body{
+  margin:0;
+  min-height:100vh;
+  background: linear-gradient(180deg,var(--bg-1) 0%,var(--bg-2) 100%), var(--bg-image);
+  background-repeat:no-repeat;
+  background-position:center center;
+  color:var(--text-primary);
+  padding:18px;
+  overflow-x:hidden;
+  position:relative;
+  transition: background 400ms ease, color 300ms ease;
+}
+/* *đặt quy tắc chung: mọi phần tử tính kích thước theo border-box.
+Toàn bộ trang sử dụng font Poppins, giao diện mềm mại, hiện đại
+body tạo nền chuyển màu từ --bg-1 sang --bg-2,
+đồng thời thêm ảnh nền và hiệu ứng mờ (blur).
+Hiệu ứng chuyển màu (transition) giúp theme đổi màu mượt mà.
+
+
+/* overlay background image to control opacity */
+body::after{
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: var(--bg-image);
+  opacity: var(--bg-image-opacity);
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  z-index: -1;
+}
+
+/*====== bubble canvas at back============ */
+#bubbles{
+  position:fixed; top:0; left:0; width:100%; height:100%;
+  z-index:-2; pointer-events:none; background:transparent;
+}
+
+/* body::after: lớp overlay phủ lên nền để điều chỉnh độ trong suốt hình nền.
+#bubbles: phần canvas hiển thị hiệu ứng bong bóng bay (nền động, z-index:-2 để nằm phía sau).
+
+
+/*========== watermark bottom-right ==============*/
+.watermark{
+  position:fixed;
+  right:18px;
+  bottom:12px;
+  font-size:22px;
+  font-weight:700;
+  opacity:0.10;
+  pointer-events:none;
+  z-index:1400;
+  background: var(--watermark-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  transform: rotate(-8deg);
+  letter-spacing:1px;
+}
+
+/*Hiển thị chữ Dương Thảo Vy ở góc dưới phải.
+Có độ nghiêng nhẹ, trong suốt, gradient màu hồng nhạt.
+Không bị bấm chọn (pointer-events:none) và nằm cố định (position:fixed).
+
+
+/* ===========header ==========================*/
+header{
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;
+  background:var(--glass);
+  padding:12px 18px;
+  border-radius:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.12);
+  transition: background 200ms ease;
+}
+header h1{font-size:22px;font-weight:700;color:var(--accent-temp);margin:0;}
+header .subtitle{font-size:13px;color:var(--muted);}
+.header-right{text-align:right;font-size:13px;line-height:1.4;color:var(--muted);}
+
+/*Bố trí tên dự án + thông tin sinh viên và GVHD.
+Có nền mờ (var(--glass)), bo tròn, đổ bóng nhẹ.
+Màu tiêu đề h1 lấy từ --accent-temp (màu hồng pastel).
+.header-right căn phải, chữ nhỏ và nhạt.
+
+/* ====================controls================ */
+.controls{display:flex;gap:8px;align-items:center;margin:10px 0;flex-wrap:wrap;}
+.select,.btn{
+  border:1px solid rgba(255,255,255,0.08);
+  padding:6px 10px;border-radius:8px;
+  background:transparent;color:var(--text-primary);
+  box-shadow:0 2px 6px rgba(0,0,0,0.06);
+  backdrop-filter: blur(6px);
+  transition: background 160ms ease, color 160ms ease;
+}
+.select:focus, .btn:focus{outline:2px solid rgba(255,255,255,0.04);}
+.btn:hover{cursor:pointer;}
+.status{margin-left:8px;font-size:13px;color:var(--muted);}
+
+/*Dàn hàng ngang các nút điều khiển (Select trạm, Pause, Clear, chọn Theme).
+.select và .btn có hiệu ứng mờ, bo góc, đổi màu khi hover.
+.status: hiển thị trạng thái (idle, running, paused).
+
+
+/*=============== theme pills =================*/
+.theme-select{display:flex;gap:8px;align-items:center;margin-left:6px;}
+.theme-pill{
+  padding:6px 10px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);
+  background:transparent;color:var(--muted); cursor:pointer;font-size:13px;
+  display:inline-flex;align-items:center;gap:6px;
+}
+.theme-pill.active{
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  color:var(--text-primary);
+  transform: translateY(-2px);
+}
+
+
+/*Các ô “🌸 Pastel”, “🦇 Batman”, “🔥 Phoenix” trong thanh điều khiển.
+Khi theme đang chọn, .active sẽ được kích hoạt:
+Có bóng mờ
+Nổi nhẹ lên (transform -2px)
+Đổi màu chữ sáng hơn.
+
+
+/*============= mini cards ========================*/
+.mini-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+  gap:10px;margin:12px 0;
+}
+.mini{
+  background:var(--card);
+  border:1px solid rgba(255,255,255,0.04);
+  border-radius:12px;
+  padding:8px;
+  text-align:center;
+  box-shadow:0 2px 6px rgba(0,0,0,0.06);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+.mini .label{font-size:12px;color:var(--muted);}
+.mini .value{font-size:16px;font-weight:600;color:var(--accent-temp);}
+
+/*Mỗi card nhỏ hiển thị dữ liệu nhiệt độ, độ ẩm, CPS, uSv, Counts.
+Có khung bo tròn, bóng nhẹ, nền mờ --card.
+.value có màu chủ đạo --accent-temp và chữ đậm.
+Khi có cảnh báo (ví dụ nhiệt độ cao), thêm class .alert → đổi màu viền và bóng đỏ.
+
+/* =======================charts ====================*/
+.charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;margin-bottom:24px;}
+.chart-card{
+  background:var(--card);border:1px solid rgba(255,255,255,0.04);border-radius:12px;padding:10px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.06);position:relative;overflow:hidden;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+.chart-card:hover{transform: translateY(-4px); box-shadow:0 10px 26px rgba(0,0,0,0.08);}
+.chart-title{font-size:14px;font-weight:600;color:var(--accent-temp);margin-bottom:6px;}
+.chart-wrap{width:100%;height:180px;position:relative;}
+.zoom-btn{position:absolute;top:10px;right:10px;background:transparent;border:1px solid rgba(255,255,255,0.04);border-radius:6px;padding:2px 6px;font-size:12px;cursor:pointer}
+.zoom-btn:hover{background:rgba(255,255,255,0.02);}
+.fullscreen{position:fixed;top:0;left:0;width:100vw;height:100vh;background:var(--bg-2);z-index:2000;padding:20px;display:flex;flex-direction:column;align-items:stretch;}
+.fullscreen .chart-wrap{height:420px;}
+
+/*.charts: lưới chứa 5 biểu đồ.
+.chart-card: mỗi khung biểu đồ có bo góc, bóng đổ, hover nhích lên.
+.chart-title: tiêu đề của biểu đồ, dùng màu cùng với dữ liệu đó.
+.zoom-btn: nút 🔍 để phóng to toàn màn hình biểu đồ. 
+.fullscreen: khi bật zoom, thẻ này chiếm toàn bộ màn hình, tăng chiều cao chart.
+
+
+
+/*============== kitty image (absolute over chart)================= */
+.kitty-img{
+  position:absolute;
+  width:36px;height:36px;
+  transform:translate(-50%,-100%); /* center above the point */
+  pointer-events:none;/*pointer-events:none để không bị click trúng.*/
+  transition:transform .25s linear, left .25s linear, top .25s linear;
+  z-index:1500;
+  opacity:0.95;
+}
+
+/*============= responsive tweaks ====================*/
+@media (max-width:600px){
+  header h1{font-size:18px;}
+  .chart-wrap{height:150px;}
+}
+
+
+/*Khi màn hình nhỏ hơn 600px (điện thoại), tự động:
+Giảm kích thước font tiêu đề.
+Giảm chiều cao biểu đồ → gọn gàng hơn.
+
+
+/* ============mini alert============================ */
+.mini.alert{box-shadow:0 6px 20px rgba(255,80,80,0.18); border-color: rgba(255,80,80,0.18); transform: translateY(-2px);}
+
+/*Khi một giá trị vượt ngưỡng (VD: nhiệt độ cao), JS sẽ thêm class alert vào .mini.
+Làm thẻ nhấp nháy đỏ, nổi lên nhẹ để thu hút sự chú ý.
+
+/* ================corner image======================*/
+.corner-img{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  width:90px;
+  height:auto;
+  border-radius:12px;
+  opacity:0.25;
+  filter:blur(0.5px);
+  z-index:1200;
+  transition:opacity 0.3s ease, transform 300ms ease;
+}
+.corner-img:hover{
+  opacity:0.55; transform: scale(1.03);
+}
+
+/*Là hình biểu tượng nhỏ (dơi, lửa, v.v.) ở góc phải dưới tương ứng với theme.
+Có hiệu ứng mờ nhẹ, tăng sáng khi hover chuột.*/
