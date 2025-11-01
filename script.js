@@ -376,14 +376,14 @@ function applyTheme(name){
 
   // update corner image (we keep original but add subtle overlay icon per theme)
   if(name === 'pastel'){
-    cornerImg.src = 'https://i.postimg.cc/Hsx681y6/1761908272006-Screenshot-20251031-175722.jpg'; // user's original image preserved
+    cornerImg.src = '1761908272006-Screenshot-20251031-175722.jpg'; // user's original image preserved
     cornerImg.style.filter = 'none';
   } else if(name === 'batman'){
     // darken + golden glow
-    cornerImg.src = 'https://i.postimg.cc/Hsx681y6/1761908272006-Screenshot-20251031-175722.jpg'; // keep user image, but apply CSS filter overlay to fit theme
+    cornerImg.src = '1761908272006-Screenshot-20251031-175722.jpg'; // keep user image, but apply CSS filter overlay to fit theme
     cornerImg.style.filter = 'brightness(0.6) contrast(1.1) drop-shadow(0 8px 18px rgba(255,215,0,0.06))';
   } else if(name === 'phoenix'){
-    cornerImg.src = 'https://i.postimg.cc/Hsx681y6/1761908272006-Screenshot-20251031-175722.jpg';
+    cornerImg.src = '1761908272006-Screenshot-20251031-175722.jpg';
     cornerImg.style.filter = 'saturate(1.2) hue-rotate(6deg) drop-shadow(0 10px 28px rgba(255,120,60,0.08))';
   }
 
